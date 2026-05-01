@@ -18,7 +18,8 @@ def is_passive(verb_frame, sentence):
     verb_lemma = verb_doc[0].lemma_.lower()
 
     in_passive_verbs = verb_lemma in PASSIVE_VERBS
-    pattern = r'\b(was|were|is|are|be)\s+\[v:'
+    # pattern = r'\b(was|were|is|are|be|being|was [argm-mnr: fatally])\s+\[v:'
+    pattern = r'\b(was|were|is|are|be|being)\b[^[]*\[v:'
     regex_match = bool(re.search(pattern, description))
 
     DEBUG_FILE.write(f"  checking: {verb_frame['verb']} | lemma: {verb_lemma} | in PASSIVE_VERBS: {in_passive_verbs}\n")
@@ -96,7 +97,7 @@ def detect_passive(srl_output, sentence):
         arg0_text = " ".join(arg0_tokens).lower()
         if "law_enforcement_agent" in arg1_text:
             continue
-        if "nobody" or "no one" in arg1_text:
+        if "no one" in arg1_text:
             continue
         flags.append({
             "type": "passive",
